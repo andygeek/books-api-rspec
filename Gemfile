@@ -35,6 +35,7 @@ end
 group :test do
   gem 'shoulda-matchers', '~> 5.0'
   gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
