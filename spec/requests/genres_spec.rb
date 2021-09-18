@@ -26,7 +26,7 @@ RSpec.describe "Genres", type: :request do
       context "when there are two genres" do
         let!(:first_genre) { create(:genre) }
         let!(:second_genre) { create(:genre) }
-        it "should deliver only one genre" do
+        it "should deliver two genres" do
           get '/genres'
           payload = JSON.parse(response.body)
           expect(payload.size).to eq(2)
