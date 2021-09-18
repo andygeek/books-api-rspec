@@ -56,4 +56,28 @@ RSpec.describe "Authors", type: :request do
       end
     end
   end
+
+  describe "POST /authors" do
+    
+    context "when a don't give a param" do
+      it "should return an error" do
+        post "/authors"
+        payload = JSON.parse(response.body)
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+    context "when we give a param" do
+      let!(:create_params) { { "author" => { 
+        "name" => Faker::Name.first_name, 
+        "last_name" => Faker::Name.last_name,
+        "age" => rand(18..60) } } }
+        
+      it "shoud return an ok" do
+        post "/authors", params: create_params
+        payload = JSON.parse(response.body)
+        expect(payload).to_not be_empty
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end
