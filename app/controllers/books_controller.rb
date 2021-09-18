@@ -4,6 +4,10 @@ class BooksController < ApplicationController
     render json: [], status: :not_found
   end
 
+  rescue_from ActionController::ParameterMissing do |e|
+    render json: {error: 'No hay parametros'}, status: :bad_request
+  end
+
   # GET /books
   def index
     @books = Book.all
@@ -14,5 +18,17 @@ class BooksController < ApplicationController
   def show
     @book = Book.find(params[:id])
     render json: @book, status: :ok
+  end
+
+  # POST /books
+  def create
+    @book = Book.create(create_params)
+    render json: @book, status: :ok
+  end 
+
+  private
+
+  def create_params
+    params.require(:book).permit(:title, :year, :genre_id, :author_id)
   end
 end

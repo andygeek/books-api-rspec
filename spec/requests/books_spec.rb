@@ -55,4 +55,29 @@ RSpec.describe "Books", type: :request do
     end
   end
 
+  describe "POST /books" do
+    
+    context "when a don't give a param" do
+      it "should return an error" do
+        post "/books"
+        payload = JSON.parse(response.body)
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+    context "when we give a param" do
+      let!(:new_genre) { create(:genre) }
+      let!(:new_author) { create(:author) }
+      let!(:create_params) { { "book" => { "title" => Faker::Book.title,
+        "year" => rand(1950..2021),
+        "author_id" => new_author.id,
+        "genre_id" => new_genre.id } } }
+
+      it "should return an ok" do
+        post "/books", params: create_params
+        payload = JSON.parse(response.body)
+        expect(payload).to_not be_empty
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end
