@@ -36,4 +36,24 @@ RSpec.describe "Authors", type: :request do
 
   end
 
+  describe "GET /authors/id" do
+    
+    context "when nothing is found" do
+      it "should not deliver anything" do
+        get "/authors/#{rand(1..10)}"
+        payload = JSON.parse(response.body)
+        expect(payload.size).to eq(0)
+        expect(response).to have_http_status(:not_found) 
+      end
+    end
+    context "when the searched record was found" do
+      let!(:author) { create(:author) }
+      it "should deliver one element" do
+        get "/authors/#{author.id}"
+        payload = JSON.parse(response.body)
+        expect(payload).to_not be_empty
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
 end
