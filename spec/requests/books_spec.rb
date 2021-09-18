@@ -35,4 +35,24 @@ RSpec.describe "Books", type: :request do
     end
   end
 
+  describe "GET /books/{:id}/edit" do
+    context "when there are two books" do
+      it "should not deliver anything" do
+        get "/books/#{rand(1..10)}"
+        payload = JSON.parse(response.body)
+        expect(payload.size).to eq(0)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+    context "when the searched record was found" do
+      let!(:book) { create(:book) }
+      it "should deliver one element" do
+        get "/books/#{book.id}"
+        payload = JSON.parse(response.body)
+        expect(payload).to_not be_empty
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
 end
