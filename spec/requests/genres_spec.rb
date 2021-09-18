@@ -59,4 +59,24 @@ RSpec.describe "Genres", type: :request do
     end
     
   end
+
+  describe "POST /genres" do
+   
+    context "when a don't give a param" do
+      it "should return an error" do
+        post "/genres"
+        payload = JSON.parse(response.body)
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+    context "when we give a param" do
+      let!(:create_params) { { "genre" => { "name" => "Genero nuevo" } } }
+      it "should return an ok" do
+        post "/genres", params: create_params
+        payload = JSON.parse(response.body)
+        expect(payload).to_not be_empty
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end
