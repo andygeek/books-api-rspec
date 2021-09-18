@@ -79,5 +79,18 @@ RSpec.describe "Books", type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
+    context "when the author or genre does not exist" do
+      let!(:create_params) { { "book" => { "title" => Faker::Book.title,
+        "year" => rand(1950..2021),
+        "author_id" => 10,
+        "genre_id" => 10 } } }
+      
+      it "description" do
+        post "/books", params: create_params
+        payload = JSON.parse(response.body)
+        expect(payload).to include( {"error"=>"Datos erroneos"} )
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
   end
 end

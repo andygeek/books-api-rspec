@@ -22,8 +22,14 @@ class BooksController < ApplicationController
 
   # POST /books
   def create
-    @book = Book.create(create_params)
-    render json: @book, status: :ok
+    begin
+      Author.find(create_params[:author_id]) && Genre.find(create_params[:genre_id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Datos erroneos" } , status: :bad_request
+    else
+      @book = Book.create(create_params)
+      render json: @book, status: :ok
+    end
   end 
 
   private
